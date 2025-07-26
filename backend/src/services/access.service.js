@@ -2,7 +2,7 @@
 
 const shopModel = require("../models/shop.model");
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
+const crypto = require('node:crypto');
 const KeyTokenService = require("./keyToken.service");
 const { createTokenPair } = require("../auth/authUtils");
 const { getInfoData } = require("../utils");
@@ -34,37 +34,24 @@ class AccessService {
 
       if(newShop){
         // create privateKey, publicKey by using crypto
-        const {privateKey, publicKey} = crypto.generateKeyPairSync('rsa', {
-          modulusLength: 4096,
-          publicKeyEncoding: {
-            type:'pkcs1', // pkcs8
-            format: 'pem'
-          },
-          privateKeyEncoding: {
-            type:'pkcs1',
-            format: 'pem'
-          }
-        });
-        // Public key crypto graphy standards!
+        const privateKey = crypto.randomBytes(64).toString('hex');
+        const publicKey = crypto.randomBytes(64).toString('hex');
         
-        console.log({privateKey, publicKey})  // save collection KeyStore
-        
-        const publicKeyString  = await KeyTokenService.createKeyToken({
+        const keyStore = await KeyTokenService.createKeyToken({
           userId: newShop._id,
-          publicKey
+          publicKey,
+          privateKey
         });
 
-        if(!publicKeyString){
+        if(!keyStore){
           return {
             code: 'xxxx',
-            message: 'publicKeyString error',
+            message: 'keyStore error',
           }
         }
-
-        const publicKeyObject = crypto.createPublicKey(publicKeyString);
         // create token pair
-        const tokens = await createTokenPair({userId: newShop._id, email}, publicKeyObject, privateKey);
-        console.log(`Created token success::`, tokens);
+        const tokens = await createTokenPair({userId: newShop._id, email}, publicKey, privateKey);
+        console.log(`cmt.access.service.Created token success::`, tokens);
 
         return {
           code: 201,
@@ -79,8 +66,9 @@ class AccessService {
         metadata: null
       }
     } catch (error) {
+      console.log(`[ERROR].err.access.service.signup:::`,error);
       return {
-        code: 'xxx',
+        code: 'xxx.err.access.service.signup',
         message: error.message,
         status: 'error'
       }
