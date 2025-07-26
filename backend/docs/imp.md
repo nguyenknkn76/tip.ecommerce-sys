@@ -33,6 +33,15 @@
 
 ### Config `.env` and `configs`
 
+#### intro & advantages
+
 1. local
 2. cloud
 3. team
+
+## Functions
+
+- sign-up shop: model-router-controller-service
+- about `lean`: `const hodelShop = await shopModel.findOne({email}).lean();`
+- package: bcrypt, crypto, jsonwebtoken, lodash
+
