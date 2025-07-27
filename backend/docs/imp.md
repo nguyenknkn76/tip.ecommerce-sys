@@ -44,3 +44,6 @@
 - sign-up shop: model-router-controller-service
 - about `lean`: `const hodelShop = await shopModel.findOne({email}).lean();`
 - package: bcrypt, crypto, jsonwebtoken, lodash
+
+## middleware for apiKey and permissions
+
