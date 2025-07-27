@@ -1,5 +1,7 @@
 @url_dev=http://localhost:3000/v1/api
 @x-api-key=39e4486ffe979b3b4334e8c64f4ee733a1843ccfbb8c18e27d2eaebbe8d5eedae56db9ed45f84ba79025dfdd6015fa0e666a6b1feab4de5c54f68340c90b6bab
+@x-client-id=68861793636425c6732d27fa
+@authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg2MTc5MzYzNjQyNWM2NzMyZDI3ZmEiLCJlbWFpbCI6Im5ndXllbjE1QGdtYWlsLmNvbSIsImlhdCI6MTc1MzYzODI4NywiZXhwIjoxNzUzODExMDg3fQ.hXChUCa9TFxJDIvJdcZ9ecKMYbaua5NCbZBSBdD1f6k
 
 ### signup
 POST {{url_dev}}/shop/signup
@@ -21,3 +23,10 @@ x-api-key: {{x-api-key}}
   "email": "nguyen15@gmail.com",
   "password": "123456"
 }
+
+### logout 
+POST  {{url_dev}}/shop/logout
+Content-Type:  application/json
+x-api-key: {{x-api-key}}
+x-client-id: {{x-client-id}}
+authorization: {{authorization}}

@@ -30,8 +30,8 @@ var keyTokenSchema = new mongoose.Schema({
         required: true,
     }
 },{
-  collection: COLLECTION_NAME,
-  timestamps: true,
+    collection: COLLECTION_NAME,
+    timestamps: true,
 });
 
 //Export the model
