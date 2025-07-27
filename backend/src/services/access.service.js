@@ -6,6 +6,7 @@ const crypto = require('node:crypto');
 const KeyTokenService = require("./keyToken.service");
 const { createTokenPair } = require("../auth/authUtils");
 const { getInfoData } = require("../utils");
+const { BadRequestError } = require("../core/error.response");
 
 const RoleShop = {
   SHOP: 'SHOP',
@@ -17,15 +18,11 @@ const RoleShop = {
 class AccessService {
   
   static signUp = async ({name, email, password}) => {
-    try {
+    // try {
       // step1:
       const hodelShop = await shopModel.findOne({email}).lean();
-      if(hodelShop){
-        return {
-          code: 'xxxx',
-          message: 'Shop already registered',
-        }
-      }
+      if(hodelShop) throw new BadRequestError('[Error]: Shop already registered!');
+
       // console.log(`cmt.access.services`,{name, password, email});
       const passwordHash = await bcrypt.hash(password, 10)
       const newShop = await shopModel.create({
@@ -44,6 +41,7 @@ class AccessService {
         });
 
         if(!keyStore){
+        // throw new BadRequestError('[Error]: Shop already registered!');          
           return {
             code: 'xxxx',
             message: 'keyStore error',
@@ -65,14 +63,14 @@ class AccessService {
         code: 200,
         metadata: null
       }
-    } catch (error) {
-      console.log(`[ERROR].err.access.service.signup:::`,error);
-      return {
-        code: 'xxx.err.access.service.signup',
-        message: error.message,
-        status: 'error'
-      }
-    }
+    // } catch (error) {
+    //   console.log(`[ERROR].err.access.service.signup:::`,error);
+    //   return {
+    //     code: 'xxx.err.access.service.signup',
+    //     message: error.message,
+    //     status: 'error'
+    //   }
+    // }
   }
 }
 
