@@ -21,10 +21,14 @@ var keyTokenSchema = new mongoose.Schema({
         required:true,
     },
     // use to detect hacker used this token illegally
-    refreshtoken:{
+    refreshTokensUsed:{
         type:Array,
-        default: []
+        default: [] // rf tokens be used
     },
+    refreshToken: {
+        type: String,
+        required: true,
+    }
 },{
   collection: COLLECTION_NAME,
   timestamps: true,
