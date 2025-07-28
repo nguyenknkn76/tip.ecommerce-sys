@@ -3,7 +3,7 @@
 const mongoose = require('mongoose'); // Erase if already required
 
 const DOCUMENT_NAME = 'Key';
-const COLLECTION_NAME = 'Keys'
+const COLLECTION_NAME = 'Keys';
 
 // Declare the Schema of the Mongo model
 var keyTokenSchema = new mongoose.Schema({
