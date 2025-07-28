@@ -15,7 +15,9 @@
 
 ### LOGOUT
 
-### Handle illegal TOKEN
+### Handle illegal refresh TOKEN
+
+Trien khai he thong tu dong phat hien token da duoc su dung boi hacker va cach xu ly
 
 ## PRODUCT
 
