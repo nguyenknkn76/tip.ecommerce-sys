@@ -12,9 +12,6 @@ var shopSchema = new mongoose.Schema({
         type:String,
         trim: true,
         maxLength: 150,
-        // required:true,
-        // unique:true,
-        // index:true,
     },
     email:{
         type:String,

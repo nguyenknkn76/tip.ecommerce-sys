@@ -27,6 +27,13 @@ Trien khai he thong tu dong phat hien token da duoc su dung boi hacker va cach x
 - Mongo
 ()
 
+### CREATE PRODUCT
+
+### SOME FUNCTION
+
+- package: slugify
+- full text search, elastich search
+
 ### Importnant Vid
 
 - 12
