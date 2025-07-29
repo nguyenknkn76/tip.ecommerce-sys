@@ -1,7 +1,7 @@
 @url_dev=http://localhost:3000/v1/api/product
 @x-api-key=39e4486ffe979b3b4334e8c64f4ee733a1843ccfbb8c18e27d2eaebbe8d5eedae56db9ed45f84ba79025dfdd6015fa0e666a6b1feab4de5c54f68340c90b6bab
 @x-client-id=68861793636425c6732d27fa
-@authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg2MTc5MzYzNjQyNWM2NzMyZDI3ZmEiLCJlbWFpbCI6Im5ndXllbjE1QGdtYWlsLmNvbSIsImlhdCI6MTc1Mzc4MDcyMCwiZXhwIjoxNzUzOTUzNTIwfQ.B2gb6mFKxTeulkySzC9NWdC21_m8FefqmWoM_jOfJqw
+@authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg2MTc5MzYzNjQyNWM2NzMyZDI3ZmEiLCJlbWFpbCI6Im5ndXllbjE1QGdtYWlsLmNvbSIsImlhdCI6MTc1Mzc4NTYyMCwiZXhwIjoxNzUzOTU4NDIwfQ.KI7Uz6nuE5KvXsSgqqo2DOkTPWubO7UZ3Va2GPDUBc0
 @refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg2MTc5MzYzNjQyNWM2NzMyZDI3ZmEiLCJlbWFpbCI6Im5ndXllbjE1QGdtYWlsLmNvbSIsImlhdCI6MTc1Mzc4MDcyMCwiZXhwIjoxNzU0Mzg1NTIwfQ.BgcSmJiCSPamnFhKkTGEdNKk1G05J9B-NvrKCdBZvPU
 
 ### create product
@@ -35,12 +35,34 @@ x-client-id: {{x-client-id}}
 authorization: {{authorization}}
 
 {
-  "product_name": "New Jean55",
+  "product_name": "Furniture",
   "product_thumb": "https://example.com/img/new-jean.jpg",
   "product_description": "Slim-fit jeans made with recycled materials",
   "product_price": 1200000,
   "product_quantity": 50,
   "product_type": "Clothing",
+  "product_shop": "{{x-client-id}}", 
+  "product_attributes": {
+    "brand": "Levi's55",
+    "size": "M",
+    "material": "Denim"
+  }
+}
+
+###  create product = Furniture
+POST {{url_dev}}
+Content-Type: application/json
+x-api-key: {{x-api-key}}
+x-client-id: {{x-client-id}}
+authorization: {{authorization}}
+
+{
+  "product_name": "Furnitures",
+  "product_thumb": "https://example.com/img/new-jean.jpg",
+  "product_description": "Slim-fit jeans made with recycled materials",
+  "product_price": 1200000,
+  "product_quantity": 50,
+  "product_type": "Furniture",
   "product_shop": "{{x-client-id}}", 
   "product_attributes": {
     "brand": "Levi's55",

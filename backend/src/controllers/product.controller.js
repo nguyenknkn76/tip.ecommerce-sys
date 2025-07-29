@@ -3,13 +3,13 @@
 const { SuccessResponse } = require("../core/success.response");
 const { product } = require("../models/product.model");
 const ProductService = require("../services/product.service");
+const ProductServiceV2 = require("../services/xxx.backup.product.service");
 
 class ProductController {
   createProduct = async (req, res, next) => {
-    console.log(`cmt.product.controller.v2.userId::::`, req.user);
     new SuccessResponse({
       message: 'Create new product success',
-      metadata: await ProductService.createProduct(
+      metadata: await ProductServiceV2.createProduct(
         req.body.product_type, 
         {
           ...req.body,
@@ -20,3 +20,19 @@ class ProductController {
   }
 }
 module.exports = new ProductController();
+
+
+// ! this is V1
+  // createProduct = async (req, res, next) => {
+  //   console.log(`cmt.product.controller.v2.userId::::`, req.user);
+  //   new SuccessResponse({
+  //     message: 'Create new product success',
+  //     metadata: await ProductService.createProduct(
+  //       req.body.product_type, 
+  //       {
+  //         ...req.body,
+  //         product_shop: req.user.userId
+  //       },
+  //     ),
+  //   }).send(res);
+  // }
