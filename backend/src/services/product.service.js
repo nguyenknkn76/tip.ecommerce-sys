@@ -33,24 +33,25 @@ class Product {
     this.product_attributes = product_attributes;
   }
   // create new product
-  /*
-    type: 'clothing',
-    payload
-  */
-  async createProduct(){
-    return await product.create(this); 
+  async createProduct(product_id){
+    return await product.create({...this, _id: product_id}); 
   }
 }
 
 // Define sub-class for diff product types Clothing
 class Clothing extends Product{
   async createProduct(){
-    const newClothing = clothing.create(this.product_attributes);
+    const newClothing = clothing.create({
+      ...this.product_attributes,
+      product_shop: this.product_shop
+    });
     if(!newClothing) throw new BadRequestError('create new clothing error');
     
-    const newProduct = await super.createProduct();
+    const newProduct = await super.createProduct((await newClothing)._id);
     if(!newProduct) throw new BadRequestError('create new product error');
 
+    // console.log("COMPARE ID HERE");
+    // if((await newClothing)._id === newProduct._id) console.log(`cmt.product.service.compare._ID:::::TRUE`);
     return newProduct;
   }
 }
@@ -58,15 +59,36 @@ class Clothing extends Product{
 // Define sub-class for diff product types Electronics
 class Electronics extends Product{
   async createProduct(){
-    const newElectronic = electronic.create(this.product_attributes);
+    const newElectronic = electronic.create({
+      ...this.product_attributes,
+      product_shop: this.product_shop
+    });
     if(!newElectronic) throw new BadRequestError('create new electronic error');
-    
-    const newProduct = await super.createProduct();
+
+    const newProduct = await super.createProduct((await newElectronic)._id);
     if(!newProduct) throw new BadRequestError('create new product error');
 
     return newProduct;
   }
 }
+
+// Define sub-class for diff product types Furniture
+// class Furnitures extends Product{
+//   async createProduct(){
+//     const newElectronic = electronic.create({
+//       ...this.product_attributes,
+//       product_shop: this.product_shop
+//     });
+//     if(!newElectronic) throw new BadRequestError('create new electronic error');
+
+//     const newProduct = await super.createProduct((await newElectronic)._id);
+//     if(!newProduct) throw new BadRequestError('create new product error');
+
+//     return newProduct;
+//   }
+// }
+
+
 
 module.exports = ProductFactory;
 

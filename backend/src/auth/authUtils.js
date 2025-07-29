@@ -4,7 +4,6 @@ const JWT = require('jsonwebtoken');
 const {asyncHandler} = require('../helpers/asyncHandler');
 const { AuthFailureError, NotFoundError } = require('../core/error.response');
 const { findByUserId } = require('../services/keyToken.service');
-const { token } = require('morgan');
 
 const HEADER = {
   API_KEY: 'x-api-key',
@@ -54,6 +53,7 @@ const authentication = asyncHandler( async (req, res, next) => {
     const decodeUser = JWT.verify(accessToken, keyStore.publicKey);
     if(userId !== decodeUser.userId) throw new AuthFailureError('Invalid userId');
     req.keyStore = keyStore;
+    req.user = decodeUser;
     return next();
   } catch (error) {
     console.log(`[Error]auth.utils.authentication:::`, error)
