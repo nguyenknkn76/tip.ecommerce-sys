@@ -3,8 +3,15 @@
 @x-client-id=68861793636425c6732d27fa
 @authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg2MTc5MzYzNjQyNWM2NzMyZDI3ZmEiLCJlbWFpbCI6Im5ndXllbjE1QGdtYWlsLmNvbSIsImlhdCI6MTc1Mzc4NTYyMCwiZXhwIjoxNzUzOTU4NDIwfQ.KI7Uz6nuE5KvXsSgqqo2DOkTPWubO7UZ3Va2GPDUBc0
 @refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg2MTc5MzYzNjQyNWM2NzMyZDI3ZmEiLCJlbWFpbCI6Im5ndXllbjE1QGdtYWlsLmNvbSIsImlhdCI6MTc1Mzc4MDcyMCwiZXhwIjoxNzU0Mzg1NTIwfQ.BgcSmJiCSPamnFhKkTGEdNKk1G05J9B-NvrKCdBZvPU
-
+@product_id=6888b37163db2e3ea5cbd3ce
 ###! QUERY
+### GET all
+GET {{url_dev}}
+x-api-key: {{x-api-key}}
+### GET one
+GET {{url_dev}}/{{product_id}}
+x-api-key: {{x-api-key}}
+
 ### GET list search product
 GET {{url_dev}}/search/Iphone
 x-api-key: {{x-api-key}}

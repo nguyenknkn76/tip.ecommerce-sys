@@ -37,3 +37,25 @@ Trien khai he thong tu dong phat hien token da duoc su dung boi hacker va cach x
 ### Importnant Vid
 
 - 12
+
+
+## Directory Structure
+
+- auth
+- config
+- controllers
+- core
+- dbs
+- helpers
+- models
+- postman
+- routes
+  - access
+  - product
+  - shop
+- services
+- utils: 
+- app.js: init middleware, init database, init routes, handle error
+- server.js
+
+
