@@ -68,5 +68,8 @@ Trien khai he thong tu dong phat hien token da duoc su dung boi hacker va cach x
 ###
 
 - inventories: stock, product quantity
-- , orders, payments, carts  
+- discount: 
+  - shop create discount 
+  - admin create discount
+- , orders, payments, carts
 
