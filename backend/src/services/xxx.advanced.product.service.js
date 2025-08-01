@@ -9,8 +9,10 @@ const {
   unPublishProductByShop,
   searchProductsByUser,
   findAllProducts,
-  findProduct
+  findProduct,
+  updateProductById
 } = require('../models/repositories/product.repo');
+const { removeUndefinedObject, updateNestedObjectParser } = require('../utils');
 
 // Factory Class
 class ProductFactory {
@@ -25,10 +27,10 @@ class ProductFactory {
     return new productClass(payload).createProduct();
   }
 
-  static async updateProduct(type, payload){
+  static async updateProduct(type, productId, payload){
     const productClass = ProductFactory.productRegistry[type];
     if(!productClass) throw new BadRequestError(`Invalid product type ${type}`);
-    return new productClass(payload).createProduct();
+    return new productClass(payload).updateProduct(productId);
   }
 
   // ! PUT
@@ -67,14 +69,13 @@ class ProductFactory {
     });
   }
 
-
   static async searchProducts ({keySearch}) {
     return await searchProductsByUser({keySearch});
   }
 }
 
 // base product Class
-class Product {
+class  Product {
   constructor({
     product_name, product_thumb, product_description, product_price,
     product_quantity, product_type, product_shop, product_attributes
@@ -92,6 +93,11 @@ class Product {
   async createProduct(product_id){
     return await product.create({...this, _id: product_id}); 
   }
+
+  // update product
+  async updateProduct(productId, bodyUpdate){
+    return await updateProductById({productId, bodyUpdate, model: product});
+  }
 }
 
 // Define sub-class for diff product types Clothing
@@ -106,9 +112,17 @@ class Clothing extends Product{
     const newProduct = await super.createProduct((await newClothing)._id);
     if(!newProduct) throw new BadRequestError('create new product error');
 
-    // console.log("COMPARE ID HERE");
-    // if((await newClothing)._id === newProduct._id) console.log(`cmt.product.service.compare._ID:::::TRUE`);
     return newProduct;
+  }
+
+  async updateProduct( productId ){
+    const objectParams = this;
+    if(objectParams.product_attributes){
+      // update child
+      await updateProductById({productId, objectParams, model: clothing});
+    }
+    const updateProduct = await super.updateProduct(productId, objectParams);
+    return updateProduct;
   }
 }
 
@@ -125,6 +139,22 @@ class Electronics extends Product{
     if(!newProduct) throw new BadRequestError('create new product error');
 
     return newProduct;
+  }
+
+  async updateProduct( productId ){
+    const objectParams = removeUndefinedObject(this);
+    if(objectParams.product_attributes){
+      await updateProductById({
+        productId, 
+        bodyUpdate: updateNestedObjectParser(objectParams.product_attributes), 
+        model: electronic
+      });
+    }
+    const updateProduct = await super.updateProduct(
+      productId, 
+      updateNestedObjectParser(objectParams),
+    );
+    return updateProduct;
   }
 }
 

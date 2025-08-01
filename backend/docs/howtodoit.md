@@ -58,4 +58,9 @@ Trien khai he thong tu dong phat hien token da duoc su dung boi hacker va cach x
 - app.js: init middleware, init database, init routes, handle error
 - server.js
 
+- compare get, delete, put, patch, post
+- PUT: create new obj, updateOne
+- POST: 
+- PATCH: updateOne
+~ bandwidth: for server
 

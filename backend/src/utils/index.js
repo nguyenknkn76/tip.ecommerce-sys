@@ -21,16 +21,73 @@ const getInfoData = ({fields = [], object = {}}) => {
   return _.pick(object, fields);
 }
 
+/**
+ * ! Generates a MongoDB projection obj that includes specific fields.
+
+ * @example getSelectData(["name", "email"]) → returns: {name: 1, email: 1}  
+ *
+ * @function getSelectData
+ * @param {String[]} select - arr of field names to include (e.g. ["name", "email"])
+ * @returns {Object} Object - mongodb projection obj with fields set to 1
+ */
+
 const getSelectData = (select = []) => {
   return Object.fromEntries(select.map(el => [el, 1]));
 }
 
+/**
+ * ! Generates a MongoDB projection obj that excludes specific fields
+ * @example getSelectData(["name", "email"]) → returns: {name: 0, email: 0} 
+ *
+ * @function unGetSelectData
+ * @param {String[]} select 
+ * @returns {Object}
+ */
+
 const unGetSelectData = (select = []) => {
   return Object.fromEntries(select.map(el => [el, 0]));
+}
+
+/**
+ * ! Removes all keys from an obj whose values are `null`
+ * * This func NOT remove `undefined` value
+ *
+ * @function removeUndefinedObject
+ * @param {Object} object - input to clean
+ * @returns {Object} 
+ * 
+ * @example
+ * const obj = {a: 1, b: null}
+ * const cleaned = removeUndefinedObject(obj)
+ * return cleaned {a: 1}
+ */
+
+const removeUndefinedObject = object => {
+  Object.keys(object).forEach(key => {
+    if(object[key] == null) delete object[key];
+  });
+  return object;
+}
+
+const updateNestedObjectParser = object => {
+  // console.log(`cmt.utils.index.[1]:::`, object);
+  const final = {};
+  Object.keys(object).forEach(key => {
+    if(typeof object[key] === 'object' && !Array.isArray(object[key])){
+      const res = updateNestedObjectParser(object[key]);
+      Object.keys(res).forEach(a => {
+        final[`${key}.${a}`] = res[a];
+      });
+    } else final[key] = object[key];
+  });
+  // console.log(`cmt.utils.index.[2]:::`, final);
+  return final;
 }
 
 module.exports = {
   getInfoData,
   getSelectData,
   unGetSelectData,
+  removeUndefinedObject,
+  updateNestedObjectParser
 }
