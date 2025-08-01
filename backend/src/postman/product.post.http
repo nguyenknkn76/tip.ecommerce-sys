@@ -52,7 +52,7 @@ x-client-id: {{x-client-id}}
 authorization: {{authorization}}
 
 ###
-@product_id=6888c551421acc89af72f509
+@product_id=688cb5c74ecb74d75e10aaa9
 ###! POST 
 ### publish product
 POST {{url_dev}}/publish/{{product_id}}

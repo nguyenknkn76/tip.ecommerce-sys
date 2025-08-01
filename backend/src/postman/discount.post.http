@@ -1,0 +1,67 @@
+@url_dev=http://localhost:3000/v1/api/discount
+@x-api-key=39e4486ffe979b3b4334e8c64f4ee733a1843ccfbb8c18e27d2eaebbe8d5eedae56db9ed45f84ba79025dfdd6015fa0e666a6b1feab4de5c54f68340c90b6bab
+### shopId
+@x-client-id=68861793636425c6732d27fa
+### accessToken
+@authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg2MTc5MzYzNjQyNWM2NzMyZDI3ZmEiLCJlbWFpbCI6Im5ndXllbjE1QGdtYWlsLmNvbSIsImlhdCI6MTc1Mzk3OTA3OCwiZXhwIjoxNzU0MTUxODc4fQ.jvW3XW70BmKjRxchvD_dYsWRhPge7DYElPXtjtwm07Y
+@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg2MTc5MzYzNjQyNWM2NzMyZDI3ZmEiLCJlbWFpbCI6Im5ndXllbjE1QGdtYWlsLmNvbSIsImlhdCI6MTc1Mzk3OTA3OCwiZXhwIjoxNzU0NTgzODc4fQ.LfFGybQHSA9gyJmsDWab5hrs_NC9nGcYKB8Pp3oGrzM
+### productId
+@product_id=6888b37163db2e3ea5cbd3ce
+### discountId
+@discount_id=688cfd3e01e911a440b9ecfa
+### discountCode
+@discount_code=SALE15MAX50123
+###! QUERY
+### get list product code
+GET {{url_dev}}/list_product_code?code={{discount_code}}&shopId={{x-client-id}}&limit=50&page=1
+Content-Type: application/json
+x-api-key: {{x-api-key}}
+x-client-id: {{x-client-id}}
+
+### get list discount by shop
+GET {{url_dev}}?shopId={{x-client-id}}&page=1&limit=50
+Content-Type: application/json
+x-api-key: {{x-api-key}}
+x-client-id: {{x-client-id}}
+authorization: {{authorization}}
+
+###! POST
+### discount amount
+POST {{url_dev}}/amount
+Content-Type: application/json
+x-api-key: {{x-api-key}}
+
+{
+  "codeId": "{{discount_code}}",
+  "userId": 2,
+  "shopId": "{{x-client-id}}",
+  "products":[{
+    "productId": "6888b37163db2e3ea5cbd3ce",
+    "quantity": 5,
+    "price": 120000
+  }]
+}
+### create discount
+POST {{url_dev}}
+Content-Type: application/json
+x-api-key: {{x-api-key}}
+x-client-id: {{x-client-id}}
+authorization: {{authorization}}
+
+{
+  "name": "Siêu sale cuối tháng",
+  "description": "Giảm 15% tối đa 50K cho các sản phẩm trong danh sách",
+  "type": "percentage",
+  "value": 15,
+  "max_value": 50000,
+  "code": "SALE15MAX50123",
+  "start_date": "2025-09-25T00:00:00Z",
+  "end_date": "2025-09-30T23:59:59Z",
+  "max_uses": 1000,
+  "max_uses_per_user": 2,
+  "min_order_value": 150000,
+  "is_active": true,
+  "applies_to": "all",
+  "product_ids": ["6888c551421acc89af72f509", "6888b37163db2e3ea5cbd3ce"]
+} 
+### "discount_product_ids": ["6888c551421acc89af72f509", "6888b37163db2e3ea5cbd3ce"]

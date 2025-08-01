@@ -63,7 +63,7 @@ const discountSchema = new mongoose.Schema({
   discount_applies_to: {
     type: String,
     require: true,
-    enum: ["all", "specific "]
+    enum: ["all", "specific"]
   },
   discount_product_ids: {
     type: Array,

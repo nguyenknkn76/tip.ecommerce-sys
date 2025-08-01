@@ -1,6 +1,16 @@
 'use strict'
 
 const _ = require('lodash');
+const { Types } = require('mongoose');
+const path = require('path');
+
+/**
+ * !
+ * @function convertToObjectIdMongodb
+ * @param {String} id 
+ * @returns 
+ */
+const convertToObjectIdMongodb = id => new Types.ObjectId(id);
 
 /**
  * ! Extracts specific fields from an object.
@@ -84,10 +94,18 @@ const updateNestedObjectParser = object => {
   return final;
 }
 
+const logValue = (key, value) => {
+  const fileName = path.basename(__filename);
+  const upperKey = key.toUpperCase();
+  console.log(`[LOG].cmt.${fileName}.${upperKey}:::::`, value);
+}
+
 module.exports = {
   getInfoData,
   getSelectData,
   unGetSelectData,
   removeUndefinedObject,
-  updateNestedObjectParser
+  updateNestedObjectParser,
+  convertToObjectIdMongodb,
+  logValue
 }

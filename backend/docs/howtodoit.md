@@ -68,8 +68,20 @@ Trien khai he thong tu dong phat hien token da duoc su dung boi hacker va cach x
 ###
 
 - inventories: stock, product quantity
-- discount: 
-  - shop create discount 
-  - admin create discount
+- discount:
+  - type of discount
+    - shop create discount 
+    - admin create discount
+  - service:
+    - gen discount code: shop | admin
+    - get discount codes: user, shop,
+    - get all product by discount code: user
+    - get discount amount: user
+    - del discount code: admin, shop
+    - cancel discount code: user
+  
 - , orders, payments, carts
 
+
+> note: handle service → using builder pattern
+> something about func of node version 20
