@@ -94,10 +94,29 @@ const updateNestedObjectParser = object => {
   return final;
 }
 
+/**
+ * ! log value to debug
+ * @function logValue
+ * @param {String} key 
+ * @param {*} value
+ * 
+ * @example
+ * const myName = `Nguyen`
+ * logValue(`myName`, myName);
+ * @output [LOG].cmt.file-location.file-name.MYNAME:::Nguyen
+ */
 const logValue = (key, value) => {
-  const fileName = path.basename(__filename);
-  const upperKey = key.toUpperCase();
-  console.log(`[LOG].cmt.${fileName}.${upperKey}:::::`, value);
+  const originalPrepareStackTrace = Error.prepareStackTrace;
+  try {
+    Error.prepareStackTrace = (_, stack) => stack;
+    const err = new Error();
+    const caller = err.stack[1];
+    const location = caller.getFileName();
+    const upperKey = key.toUpperCase();
+    console.log(`[LOG].cmt.${location}.${upperKey}:::${value}`)
+  } catch (error) {
+    Error.prepareStackTrace = originalPrepareStackTrace;
+  }
 }
 
 module.exports = {

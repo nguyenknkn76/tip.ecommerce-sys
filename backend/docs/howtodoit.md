@@ -80,8 +80,24 @@ Trien khai he thong tu dong phat hien token da duoc su dung boi hacker va cach x
     - del discount code: admin, shop
     - cancel discount code: user
   
-- , orders, payments, carts
+- cart
+  - services
+    - add product to cart: user
+    - reduce product quantity: user
+    - increase product quantity: user
+    - get list to cart: user
+    - delete cart: user
+    - delete cart item: user
+
+- orders:
+  - ...: 
+    - positive key, negative key, distributed key
+    - pessimistic locking, optimistic locking
+  - services:
+    - 
+-  payments
 
 
 > note: handle service → using builder pattern
 > something about func of node version 20
+> stream nodejs
