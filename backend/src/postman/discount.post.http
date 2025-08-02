@@ -41,7 +41,7 @@ x-api-key: {{x-api-key}}
     "price": 120000
   }]
 }
-### create discount
+### CREATE discount
 POST {{url_dev}}
 Content-Type: application/json
 x-api-key: {{x-api-key}}
@@ -49,19 +49,19 @@ x-client-id: {{x-client-id}}
 authorization: {{authorization}}
 
 {
-  "name": "Siêu sale cuối tháng",
+  "name": "test REVIEW 2 specific discount",
   "description": "Giảm 15% tối đa 50K cho các sản phẩm trong danh sách",
   "type": "percentage",
-  "value": 15,
+  "value": 20,
   "max_value": 50000,
-  "code": "SALE15MAX50123",
+  "code": "SALE-ALL-FOR-REVIEW222222",
   "start_date": "2025-09-25T00:00:00Z",
   "end_date": "2025-09-30T23:59:59Z",
   "max_uses": 1000,
   "max_uses_per_user": 2,
   "min_order_value": 150000,
   "is_active": true,
-  "applies_to": "all",
+  "applies_to": "specific",
   "product_ids": ["6888c551421acc89af72f509", "6888b37163db2e3ea5cbd3ce"]
 } 
 ### "discount_product_ids": ["6888c551421acc89af72f509", "6888b37163db2e3ea5cbd3ce"]

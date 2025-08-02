@@ -1,0 +1,61 @@
+@url_dev=http://localhost:3000/v1/api/checkout
+@x-api-key=39e4486ffe979b3b4334e8c64f4ee733a1843ccfbb8c18e27d2eaebbe8d5eedae56db9ed45f84ba79025dfdd6015fa0e666a6b1feab4de5c54f68340c90b6bab
+### shopId
+@x-client-id=68861793636425c6732d27fa
+### accessToken
+@authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg2MTc5MzYzNjQyNWM2NzMyZDI3ZmEiLCJlbWFpbCI6Im5ndXllbjE1QGdtYWlsLmNvbSIsImlhdCI6MTc1Mzk3OTA3OCwiZXhwIjoxNzU0MTUxODc4fQ.jvW3XW70BmKjRxchvD_dYsWRhPge7DYElPXtjtwm07Y
+@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg2MTc5MzYzNjQyNWM2NzMyZDI3ZmEiLCJlbWFpbCI6Im5ndXllbjE1QGdtYWlsLmNvbSIsImlhdCI6MTc1Mzk3OTA3OCwiZXhwIjoxNzU0NTgzODc4fQ.LfFGybQHSA9gyJmsDWab5hrs_NC9nGcYKB8Pp3oGrzM
+### productId
+@product_id=6888b37163db2e3ea5cbd3ce
+### discountId
+@discount_id=688cfd3e01e911a440b9ecfa
+### discountCode
+@discount_code=SALE15MAX50123
+
+#! Checkout review flows
+#1-create discount for product
+#2-create product for 2 shops
+#3-create data for review
+
+# 6888c551421acc89af72f509 6888b37163db2e3ea5cbd3ce
+# code ~~~~ SALE-ALL-FOR-REVIEW222222
+### REVIEW checkout
+POST {{url_dev}}/review
+Content-Type: application/json
+x-api-key: {{x-api-key}}
+x-client-id: {{x-client-id}}
+
+{ "cartId": "688d8b7cc171e85530c1f371" ,
+  "userId": 123456,
+  "shop_order_ids": [
+    {
+      "shopId": "{{x-client-id}}",
+      "shop_discounts":[],
+      "item_products":[
+        {
+          "price":1514,
+          "quantity":2,
+          "product_id":"6888c551421acc89af72f509"
+        }
+      ]
+    },
+    {
+      "shopId": "{{x-client-id}}",
+      "shop_discounts":[
+        {
+          "shop_id":"{{x-client-id}}",
+          "discount_id":"688d87a5e14f81368a8b41a1",
+          "codeId":"SALE-ALL-FOR-REVIEW222222"
+        }
+      ],
+      "item_products":[
+        {
+          "price":2500000,
+          "quantity":5,
+          "product_id":"6888b37163db2e3ea5cbd3ce"
+        }
+      ]
+    }
+    
+  ]
+}

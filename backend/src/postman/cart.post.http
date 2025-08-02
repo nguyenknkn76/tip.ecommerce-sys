@@ -9,7 +9,7 @@
 @product_id=6888b37163db2e3ea5cbd3ce
 @product_id2=688cb5c74ecb74d75e10aaa9
 ### userId
-@userId=11002
+@userId=123456
 
 ###! GET
 ### get list to cart
@@ -49,11 +49,11 @@ x-api-key: {{x-api-key}}
 {
   "userId": "{{userId}}",
   "product":{
-    "productId":"{{product_id}}",
+    "productId":"6888b37163db2e3ea5cbd3ce",
     "shopId":"{{x-client-id}}",
-    "quantity":12,
-    "name":"Iphone 55",
-    "price":1514
+    "quantity":5,
+    "name":"Iphone 44",
+    "price":2500000
   }
 }
 

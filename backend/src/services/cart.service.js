@@ -31,13 +31,51 @@ class CartService {
 
   // END REPO
   
+  // ! ==========================================
+  static async addToCartV3({ userId, product = {} }) {
+    // 1. Tìm giỏ hàng của người dùng
+    const userCart = await cart.findOne({ cart_userId: userId });
+
+    // 2. Nếu người dùng chưa có giỏ hàng -> Tạo giỏ hàng mới với sản phẩm đầu tiên
+    if (!userCart) {
+        return await CartService.createUserCart({ userId, product });
+    }
+
+    // 3. Nếu giỏ hàng đã có -> Kiểm tra xem sản phẩm đã tồn tại trong giỏ chưa
+    const existingProductIndex = userCart.cart_products.findIndex(
+        p => p.productId === product.productId
+    );
+
+    // 4. Nếu sản phẩm đã tồn tại trong giỏ (tìm thấy index) -> Cập nhật số lượng
+    if (existingProductIndex > -1) {
+        const query = {
+            cart_userId: userId,
+            'cart_products.productId': product.productId
+        };
+        const update = {
+            // Tăng số lượng của sản phẩm đã có
+            $inc: { 'cart_products.$.quantity': product.quantity }
+        };
+        // QUAN TRỌNG: Lệnh update này không cần và không nên có upsert: true
+        return await cart.findOneAndUpdate(query, update, { new: true });
+    }
+
+    // 5. Nếu sản phẩm chưa tồn tại trong giỏ -> Thêm sản phẩm mới vào mảng
+    // Dùng $push để thêm sản phẩm mới vào cuối mảng cart_products
+    return await cart.findOneAndUpdate(
+        { cart_userId: userId },
+        { $push: { cart_products: product } },
+        { new: true }
+    );
+  }
+  // ! ==========================================
 
 /*
   1. check cart exists
   2. if userCart exist but cart is empty
   3. if userCart exist and have this product → update quantity
-
 */
+  
   static async addToCart({userId, product = {}}){
     const userCart = await cart.findOne({cart_userId: userId});
     

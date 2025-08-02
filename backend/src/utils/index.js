@@ -119,6 +119,11 @@ const logValue = (key, value) => {
   }
 }
 
+const printObjectKeyValue = (obj) => {
+  for (const [key, value] of Object.entries(obj)) {
+    console.log(`${key}:`, value);
+  }
+}
 module.exports = {
   getInfoData,
   getSelectData,
@@ -126,5 +131,6 @@ module.exports = {
   removeUndefinedObject,
   updateNestedObjectParser,
   convertToObjectIdMongodb,
-  logValue
+  logValue,
+  printObjectKeyValue
 }
