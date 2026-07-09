@@ -4,74 +4,68 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-All commands run from the `backend/` directory:
+All commands run from the `backend/` directory.
 
 ```bash
-npm run dev      # Start with nodemon (development)
-npm start        # Start production server
-npm test         # Run test.js with nodemon
+npm run dev      # Start with nodemon (auto-reload)
+npm start        # Start with node
+npm run test     # Run test.js with nodemon
 ```
 
-No lint or test framework is configured — `npm test` runs `nodemon test.js` (manual test file).
+No linter is configured. No formal test framework — `test.js` is a scratch file.
 
 ## Architecture
 
-Single Express 5 monolith with MongoDB (Mongoose) and Redis. All source code lives in `backend/src/`.
+Node.js + Express v5 backend for an e-commerce platform. Single service, MVC + Service layer pattern.
 
-**Request lifecycle:**
-1. `server.js` → `app.js` (middleware: helmet, morgan, compression, body-parser)
-2. All routes require two middleware layers applied in `routes/index.js`:
-   - `apiKey` — validates `x-api-key` header against the `apikeys` collection; attaches `req.objKey`
-   - `permission('0000')` — checks that the key's permissions array includes the required level
-3. Protected routes additionally use `authentication` / `authenticationV2` from `auth/authUtils.js`:
-   - Requires `x-client-id` (userId) + `authorization` (JWT access token)
-   - `authenticationV2` also handles refresh via `x-rtoken-id` header
-   - JWT keypairs are stored per-user in the `keytokens` collection
+**Request flow:**
+```
+Request
+  → Morgan / Helmet / Compression (global middleware)
+  → API key check (x-api-key header → ApiKey collection)
+  → Permission check (code '0000')
+  → Route → Controller → Service → Mongoose → MongoDB
+  → Standardized Success/Error response
+```
 
-**Layer structure (strict separation):**
-- `routes/` — defines endpoints, applies auth middleware, delegates to controllers
-- `controllers/` — extracts request data, calls service, returns `SuccessResponse`
-- `services/` — all business logic; services may call each other (e.g., `checkout.service` calls `discount.service`, `inventory.service`, `cart.service`)
-- `models/` — Mongoose schemas only
-- `core/` — `success.response.js` and `error.response.js` (custom error classes extending `TypeError`)
-- `helpers/asyncHandler.js` — wraps async route handlers; errors propagate to Express error middleware in `app.js`
+**Layer responsibilities:**
+- `routes/` — URL mapping and middleware chains
+- `controllers/` — extract request data, call service, return response
+- `services/` — all business logic; no direct HTTP objects
+- `models/` — Mongoose schemas; also define class-based query helpers
+- `auth/` — `checkAuth.js` (API key + permission), `authUtils.js` (JWT sign/verify)
+- `core/` — `SuccessResponse` / `ErrorResponse` classes; all controllers use these
+- `dbs/init.mongodb.js` — Mongoose connection as a Singleton
+- `configs/config.mongodb.js` — reads `NODE_ENV` to select dev vs. production config
 
-**Domain modules:** `access` (auth/shop registration), `product`, `inventory`, `discount`, `cart`, `checkout`, `shop`
+## Key Design Patterns
 
-**Checkout flow** (`checkout.service.js`) is the most complex service: it aggregates multi-shop orders, applies discounts, acquires Redis distributed locks per SKU during order placement, and releases them after.
+**Polymorphic Products:** `product.model.js` defines a base `Product` schema plus sub-schemas (Electronics, Clothing, Furniture). `ProductFactory` in `product.service.js` dispatches `create`/`update` to the correct subclass via a registry map.
 
-## Database
+**Standardized responses:** All controllers return `new SuccessResponse({...}).send(res)` or throw a typed error (`BadRequestError`, `NotFoundError`, etc.) that the global error handler formats.
 
-MongoDB via `src/configs/config.mongodb.js`. Environment is selected by `NODE_ENV`:
-- `development` → `shopDEV` on `localhost:27017`
-- `production` → `shopPRO` on `localhost:27017`
+**Async error propagation:** Route handlers are wrapped with `asyncHandler` from `helpers/asyncHandler.js` so thrown errors reach the global handler without try/catch in every controller.
 
-Connection uses singleton pattern (`dbs/init.mongodb.js` — `Database.getInstance()`).
+**Session tokens:** Login stores access + refresh tokens in the `KeyToken` collection keyed by shop ID. Refresh token rotation is implemented; old tokens are invalidated on reuse.
 
-Redis is used only for distributed inventory locking in the checkout flow (`services/redis.service.js` with `acquireLock` / `releaseLock`).
+## Environment
 
-## Auth Headers Reference
+Copy `.env.example` (or set manually):
 
-| Header | Purpose |
-|--------|---------|
-| `x-api-key` | API key for all routes |
-| `x-client-id` | userId for JWT-authenticated routes |
-| `authorization` | JWT access token |
-| `x-rtoken-id` | JWT refresh token (authenticationV2 only) |
+| Variable | Dev default |
+|---|---|
+| `NODE_ENV` | `dev` |
+| `DEV_APP_PORT` | `3000` |
+| `DEV_DB_HOST` | `localhost` |
+| `DEV_DB_PORT` | `27017` |
+| `DEV_DB_NAME` | `shopDEV` |
 
-## Postman Collections
+Production uses `PRO_*` equivalents and `NODE_ENV=production`.
 
-API test collections are in `backend/src/postman/` for manual API testing.
+## API Key Header
 
-## Documentation
+Every request must include `x-api-key: <key>` matching a document in the `apikeys` collection. Seed one manually in MongoDB for local dev.
 
-Detailed docs live in `docs/` at the project root:
+## Routes Prefix
 
-| File | Description |
-|------|-------------|
-| [`docs/features.md`](docs/features.md) | Full API endpoint reference for all 6 domains |
-| [`docs/access-and-authentication.md`](docs/access-and-authentication.md) | Auth flows, JWT keypair model, known issues, optimization plan |
-| [`docs/product.md`](docs/product.md) | Product service patterns, Factory/Registry, known issues, optimization plan |
-| [`docs/discount.md`](docs/discount.md) | Discount service flows, atomic ops, known issues, optimization plan |
-| [`docs/cart.md`](docs/cart.md) | Cart service flows, upsert patterns, known issues, optimization plan |
-| [`docs/plan.md`](docs/plan.md) | Backend, testing, frontend, and deployment checklists |
+All routes are mounted under `/v1/api/`. Main route groups: `shop` (auth), `product`, `discount`, `cart`, `checkout`, `inventory`.
